@@ -1,0 +1,38 @@
+{
+  "name": "orchestrator-pp-vue-view",
+  "version": "1.0.0",
+  "main": "dist/orchestrator-pp-vue-view.umd.js",
+  "module": "dist/orchestrator-pp-vue-view.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruslanpetunin/orchestrator-pp-vue-view"
+  },
+  "scripts": {
+    "build": "vite build && vue-tsc --emitDeclarationOnly"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/orchestrator-pp-vue-view.es.js",
+      "require": "./dist/orchestrator-pp-vue-view.umd.js"
+    },
+    "./style.css": "./dist/orchestrator-pp-vue-view.css"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.17"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.2",
+    "vue-tsc": "^3.0.1"
+  },
+  "dependencies": {
+    "orchestrator-pp-flow": "^1.0.0",
+    "orchestrator-pp-vue-ui-kit": "^1.0.0"
+  }
+}

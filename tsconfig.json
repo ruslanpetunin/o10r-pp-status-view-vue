@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "declaration": true,
+    "declarationDir": "dist",
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "orchestrator-pp-flow": ["./../orchestrator-pp-flow/src", "orchestrator-pp-flow"],
+      "orchestrator-pp-vue-ui-kit": ["./../orchestrator-pp-vue-ui-kit/src", "orchestrator-pp-vue-ui-kit"]
+    }
+  },
+  "include": ["src"]
+}
