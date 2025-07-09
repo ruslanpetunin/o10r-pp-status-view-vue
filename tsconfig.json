@@ -15,7 +15,6 @@
     "baseUrl": ".",
     "paths": {
       "orchestrator-pp-core": ["./../orchestrator-pp-core/src", "orchestrator-pp-core"],
-      "orchestrator-pp-flow": ["./../orchestrator-pp-flow/src", "orchestrator-pp-flow"],
       "orchestrator-pp-vue-ui-kit": ["./../orchestrator-pp-vue-ui-kit/src", "orchestrator-pp-vue-ui-kit"]
     }
   },

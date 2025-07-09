@@ -1,11 +1,15 @@
 import type { App } from 'vue';
+import PpUiKit from 'orchestrator-pp-vue-ui-kit';
 import * as components from './components';
+import 'orchestrator-pp-vue-ui-kit/style.css';
 import './style.css';
 
 export * from './components';
 
 export default {
     install(app: App) {
+        app.use(PpUiKit);
+
         for (const key in components) {
             app.component(key, (components as any)[key]);
         }

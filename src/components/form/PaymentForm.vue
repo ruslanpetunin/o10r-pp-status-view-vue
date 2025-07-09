@@ -11,8 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { PaymentMethodFieldType } from "orchestrator-pp-core";
-import type { PaymentMethod } from "orchestrator-pp-flow";
+import { PaymentMethodFieldType, PaymentMethod } from "orchestrator-pp-core";
 import { PPInput } from "orchestrator-pp-vue-ui-kit";
 
 defineProps<{
