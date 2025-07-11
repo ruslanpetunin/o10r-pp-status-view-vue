@@ -1,6 +1,6 @@
 {
   "name": "orchestrator-pp-vue-view",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "main": "dist/orchestrator-pp-vue-view.umd.js",
   "module": "dist/orchestrator-pp-vue-view.es.js",
   "types": "dist/index.d.ts",
