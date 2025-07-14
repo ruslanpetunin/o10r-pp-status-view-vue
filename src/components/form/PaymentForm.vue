@@ -1,54 +1,58 @@
 <template>
-  <form action="">
+  <form action="" @submit="handleSubmit">
     <template v-for="field of paymentMethod.paymentForm.fields" :key="field.name">
       <PPInput
-        v-if="PaymentMethodFieldType.NUMBER === field.type"
+        v-if="isPPInputType(field.type)"
         :label="translate(`label_${field.name}`)"
-        type="number"
-        v-model="value"
-      />
-      <PPInput
-        v-else-if="PaymentMethodFieldType.TEXT === field.type"
-        :label="translate(`label_${field.name}`)"
-        type="text"
-        v-model="value"
-      />
-      <PPInput
-        v-else-if="PaymentMethodFieldType.EMAIL === field.type"
-        :label="translate(`label_${field.name}`)"
-        type="email"
-        v-model="value"
-      />
-      <PPInput
-        v-else-if="PaymentMethodFieldType.TEL === field.type"
-        :label="translate(`label_${field.name}`)"
-        type="tel"
-        v-model="value"
-      />
-      <PPInput
-        v-else-if="PaymentMethodFieldType.PASSWORD === field.type"
-        :label="translate(`label_${field.name}`)"
-        type="password"
-        v-model="value"
+        :type="field.type"
+        :name="field.name"
+        class="pp-input"
       />
     </template>
+    <PPButton class="pp-button">{{ translate(`btn_pay`) }}</PPButton>
   </form>
 </template>
 
 <script setup lang="ts">
-import { PaymentMethodFieldType } from 'orchestrator-pp-core'
 import type { PaymentMethod, Translate } from "orchestrator-pp-core";
 import { PPInput } from "orchestrator-pp-vue-ui-kit";
-import { ref } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   paymentMethod: PaymentMethod,
   translate: Translate
 }>();
 
-const value = ref<string>('');
+const emit = defineEmits<{
+  (event: 'pay'): void;
+}>();
+
+function isPPInputType(type: string): type is 'text' | 'number' | 'email' | 'password' | 'tel' {
+  return ['text', 'number', 'email', 'password', 'tel'].includes(type);
+}
+
+async function handleSubmit(event: Event) {
+  event.preventDefault();
+
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
+
+  const data: Record<string, unknown> = {};
+  formData.forEach((value, key) => {
+    data[key] = value;
+  });
+
+  await props.paymentMethod.paymentForm.onSubmit?.(data);
+  emit('pay');
+}
 </script>
 
 <style scoped>
+.pp-input:not(:last-of-type) {
+  margin-bottom: var(--pp-gap-md);
+}
 
+.pp-button {
+  width: 100%;
+  margin-top: var(--pp-gap-xl);
+}
 </style>
