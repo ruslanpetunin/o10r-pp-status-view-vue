@@ -32,7 +32,8 @@
     "vue-tsc": "^3.0.1"
   },
   "dependencies": {
-    "orchestrator-pp-core": "^1.0.0",
-    "orchestrator-pp-vue-ui-kit": "^1.0.0"
+    "orchestrator-pp-core": "^2.0.0",
+    "orchestrator-pp-payment-method": "^2.0.2",
+    "orchestrator-pp-vue-ui-kit": "^1.1.1"
   }
 }

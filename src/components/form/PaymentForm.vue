@@ -14,7 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import type { PaymentMethod, Translate } from "orchestrator-pp-core";
+import type { Translate } from "orchestrator-pp-core";
+import type { PaymentMethod } from "orchestrator-pp-payment-method";
 import { PPInput } from "orchestrator-pp-vue-ui-kit";
 
 const props = defineProps<{
@@ -23,7 +24,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: 'pay'): void;
+  (event: 'pay', data: Record<string, unknown>): void;
 }>();
 
 function isPPInputType(type: string): type is 'text' | 'number' | 'email' | 'password' | 'tel' {
@@ -42,7 +43,7 @@ async function handleSubmit(event: Event) {
   });
 
   await props.paymentMethod.paymentForm.onSubmit?.(data);
-  emit('pay');
+  emit('pay', data);
 }
 </script>
 

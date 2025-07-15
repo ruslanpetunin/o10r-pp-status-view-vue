@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { Language } from 'orchestrator-pp-core'
+import { ref, watch } from 'vue';
+import { Language } from 'orchestrator-pp-core';
 
 const props = defineProps<{
   current: Language
