@@ -1,5 +1,5 @@
 <template>
-  <select v-model="selected">
+  <select v-model="selected" aria-label="Choose a language">
     <option v-for="language in languages" :key="language.code" :value="language.code">
       {{ language.label }}
     </option>
@@ -37,3 +37,10 @@ watch(
   }
 );
 </script>
+
+<style>
+select {
+  width: 100%;
+  font-size: var(--pp-font-size-lg);
+}
+</style>
