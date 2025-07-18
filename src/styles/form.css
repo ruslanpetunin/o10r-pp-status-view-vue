@@ -1,0 +1,8 @@
+.pp-input:not(:last-of-type) {
+  margin-bottom: var(--pp-gap-sm);
+}
+
+.pp-button {
+  width: 100%;
+  margin-top: var(--pp-gap-xl);
+}
