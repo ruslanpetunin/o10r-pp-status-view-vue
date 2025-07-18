@@ -11,7 +11,7 @@
         class="pp-input"
       />
     </template>
-    <PPButton class="pp-button" :disabled="!formValidationResult.isValid">
+    <PPButton class="pp-button" :disabled="!formValidationResult.isValid || submited">
       {{ translate(`b_pay`) }}
     </PPButton>
   </form>
@@ -32,6 +32,7 @@ const emit = defineEmits<{
   (event: 'pay', data: Record<string, unknown>): void;
 }>();
 
+const submited = ref<boolean>(false);
 const touched = ref<string[]>([]);
 const formValidationResult = ref<FormValidationResult>({ isValid: false, errors: {} });
 const formRef = ref<HTMLFormElement>();
@@ -92,6 +93,8 @@ async function handleInput(): Promise<void> {
 
 async function handleSubmit() {
   const formData = getFormData();
+
+  submited.value = true;
 
   await props.paymentMethod.paymentForm.onSubmit(formData);
   emit('pay', formData);
