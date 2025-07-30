@@ -21,6 +21,8 @@
           :name="'expiry'"
           :error="validationErrors['expiry']"
           :mask="'MM/YY'"
+          :disabled="expiryDisabled"
+          :value="unmaskedValues.expiry || ''"
           @input="unmaskedValues.expiry = $event"
           @blur="touched.push('expiry')"
         />
@@ -64,12 +66,22 @@
     <PPButton class="pp-button" :disabled="!formValidationResult.isValid || submitted">
       {{ translate(`b_pay`) }}
     </PPButton>
+    <PPButton
+      v-if="isSavedCardForm"
+      class="pp-button-remove"
+      type="button"
+      :disabled="submitted"
+      @click="handleRemoveCard"
+    >
+      {{ translate(`b_remove`) }}
+    </PPButton>
   </form>
 </template>
 
 <script setup lang="ts">
 import type { PaymentMethodField, Translate } from 'orchestrator-pp-core';
-import type { PaymentMethod } from 'orchestrator-pp-payment-method'
+import type { PaymentMethod } from 'orchestrator-pp-payment-method';
+import { isSavedCardPaymentMethod } from 'orchestrator-pp-payment-method';
 import { PPInput } from "orchestrator-pp-vue-ui-kit";
 import { ref, onMounted } from 'vue';
 import usePaymentForm from './../../composable/usePaymentForm';
@@ -79,6 +91,7 @@ type CardFieldsConfig = {
   showExpiry: boolean;
   showCvv: boolean;
   showCardholder: boolean;
+  expiryDisabled: boolean;
   otherFields: PaymentMethodField[]
 };
 
@@ -89,7 +102,11 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: 'pay', data: Record<string, unknown>): void;
+  (event: 'removed'): void;
 }>();
+
+const isSavedCardForm = isSavedCardPaymentMethod(props.paymentMethod);
+const unmaskedValues = ref<Record<string, string>>({});
 
 const {
   formRef,
@@ -105,12 +122,27 @@ const {
   showExpiry,
   showCvv,
   showCardholder,
+  expiryDisabled,
   otherFields
 } = props.paymentMethod.paymentForm.fields.reduce<CardFieldsConfig>(
   (acc, field) => {
     if (field.name === 'pan') {
       acc.showPan = true;
     } else if (['expiry_month', 'expiry_year'].includes(field.name)) {
+      if (field.value) {
+        let month = (unmaskedValues.value.expiry || '').slice(0, 2);
+        let year = (unmaskedValues.value.expiry || '').slice(2);
+
+        if (field.name === 'expiry_month') {
+          month = field.value;
+        } else if (field.name === 'expiry_year') {
+          year = field.value;
+        }
+
+        unmaskedValues.value.expiry = `${month}${year}`;
+      }
+
+      acc.expiryDisabled = acc.expiryDisabled || field.disabled || false;
       acc.showExpiry = true;
     } else if (field.name === 'cvv') {
       acc.showCvv = true;
@@ -122,11 +154,8 @@ const {
 
     return acc;
   },
-  { showPan: false, showExpiry: false, showCvv: false, showCardholder: false, otherFields: [] }
+  { showPan: false, showExpiry: false, showCvv: false, showCardholder: false, expiryDisabled: false, otherFields: [] }
 );
-
-const unmaskedValues = ref<Record<string, string>>({});
-
 
 function getFormData(): Record<string, unknown> {
   const data: Record<string, unknown> = {};
@@ -160,6 +189,12 @@ async function validateForm(): Promise<void> {
   if (formValidationResult.value.errors['expiry_month'] || formValidationResult.value.errors['expiry_year']) {
     formValidationResult.value.errors['expiry'] = Object.assign({}, formValidationResult.value.errors['expiry_month'], formValidationResult.value.errors['expiry_year']);
   }
+}
+
+async function handleRemoveCard() {
+  submitted.value = true;
+
+  emit('removed');
 }
 
 async function handleSubmit() {

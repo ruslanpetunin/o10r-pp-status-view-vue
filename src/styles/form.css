@@ -6,3 +6,13 @@
   width: 100%;
   margin-top: var(--pp-gap-xl);
 }
+
+.ui-button.pp-button-remove,
+.ui-button.pp-button-remove:hover
+{
+  width: 100%;
+  color: var(--pp-text-color);
+  margin-top: var(--pp-gap-sm);
+  border: none;
+  background: transparent;
+}

@@ -4,6 +4,7 @@
     :translate="translate"
     :paymentMethod="paymentMethod"
     @pay="$emit('pay', $event)"
+    @removed="$emit('removed')"
   />
   <BasePaymentForm
     v-else
@@ -26,5 +27,6 @@ defineProps<{
 
 defineEmits<{
   (event: 'pay', data: Record<string, unknown>): void;
+  (event: 'removed'): void;
 }>();
 </script>
