@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+import useRedirect from './../../composable/useRedirect';
 import type { ThreeDS } from 'orchestrator-pp-core';
 import { ref } from 'vue';
 
@@ -14,6 +15,7 @@ const props = defineProps<{
   paymentStatus: ThreeDS
 }>();
 
+const { createHiddenForm, createWindow } = useRedirect();
 const runRedirect = ref<() => void>();
 const threeds = props.paymentStatus.threeds;
 
@@ -32,38 +34,9 @@ function createHiddenIframe(): HTMLIFrameElement {
   return iframe;
 }
 
-function createHiddenForm(url: string, data: Record<string, string>): HTMLFormElement {
-  const form: HTMLFormElement = document.createElement('form');
-
-  form.method = 'POST';
-  form.action = url;
-
-  for (const key of Object.keys(data)) {
-    const input = document.createElement('input');
-
-    input.type = 'hidden';
-    input.name = key;
-    input.value = data[key];
-
-    form.appendChild(input);
-  }
-
-  return form;
-}
-
-function createWindow() {
-  const windowName: string = 'w_' + Date.now() + Math.floor(Math.random() * 100000).toString();
-  const features = 'height=550,width=800,channelmode=0,dependent=0,directories=0,fullscreen=0,location=0,menubar=0,resizable=0,scrollbars=0,status=0,toolbar=0';
-
-  return {
-    name: windowName,
-    newWindow: window.open('', windowName, features)
-  };
-}
-
 if ('iframe' in threeds) {
   const iframe = createHiddenIframe();
-  const form = createHiddenForm(threeds.iframe.url, threeds.iframe.params);
+  const form = createHiddenForm(threeds.iframe.url, 'POST', threeds.iframe.params);
 
   form.target = iframe.name;
 
@@ -75,7 +48,7 @@ if ('iframe' in threeds) {
 } else {
   runRedirect.value = () => {
     const { name } = createWindow();
-    const form = createHiddenForm(threeds.redirect.url, threeds.redirect.params);
+    const form = createHiddenForm(threeds.redirect.url, 'POST', threeds.redirect.params);
 
     form.target = name;
 
