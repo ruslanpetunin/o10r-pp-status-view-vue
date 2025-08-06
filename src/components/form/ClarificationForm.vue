@@ -12,7 +12,7 @@
       />
     </template>
     <PPButton class="pp-button" :disabled="!formValidationResult.isValid || submitted">
-      {{ translate(`b_pay`) }}
+      {{ translate(`b_clarify`) }}
     </PPButton>
   </form>
 </template>
