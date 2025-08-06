@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "orchestrator-pp-core": "^4.0.0",
-    "orchestrator-pp-payment-method": "^5.0.0",
+    "orchestrator-pp-payment-method": "^5.1.0",
     "orchestrator-pp-vue-ui-kit": "^3.1.0"
   }
 }

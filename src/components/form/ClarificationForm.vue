@@ -1,6 +1,6 @@
 <template>
   <form action="" ref="formRef" @submit.prevent="handleSubmit" @input="validateForm">
-    <template v-for="field of form.paymentForm.fields" :key="field.name">
+    <template v-for="field of form.fields" :key="field.name">
       <PPInput
         v-if="isPPInputType(field.type)"
         :label="translate(`l_${field.name}`)"
@@ -21,8 +21,8 @@
 import type { Clarification, Translate } from 'orchestrator-pp-core';
 import { useForm as buildFormConfig } from 'orchestrator-pp-payment-method';
 import useForm from './../../composable/useForm';
-import { PPInput } from 'orchestrator-pp-vue-ui-kit'
-import { onMounted } from 'vue'
+import { PPInput } from 'orchestrator-pp-vue-ui-kit';
+import { onMounted } from 'vue';
 
 const props = defineProps<{
   paymentStatus: Clarification
@@ -47,7 +47,7 @@ const {
 
 async function validateForm(): Promise<void> {
   formValidationResult.value.isValid = false;
-  formValidationResult.value = await form.paymentForm.validate(getFormData());
+  formValidationResult.value = await form.validate(getFormData());
 }
 
 async function handleSubmit() {

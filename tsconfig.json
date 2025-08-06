@@ -16,6 +16,7 @@
     "paths": {
       "orchestrator-pp-core": ["./../orchestrator-pp-core/src", "orchestrator-pp-core"],
       "orchestrator-pp-payment-method": ["./../orchestrator-pp-payment-method/src", "orchestrator-pp-payment-method"],
+      "orchestrator-pp-payment-form": ["./../orchestrator-pp-payment-form/src", "orchestrator-pp-payment-form"],
       "orchestrator-pp-vue-ui-kit": ["./../orchestrator-pp-vue-ui-kit/src", "orchestrator-pp-vue-ui-kit"]
     }
   },
