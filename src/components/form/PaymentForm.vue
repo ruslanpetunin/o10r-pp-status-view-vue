@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import type { Translate } from "orchestrator-pp-core";
 import type { PaymentMethod } from "orchestrator-pp-payment-method";
-import CardPaymentForm from './CardPaymentForm.vue';
-import BasePaymentForm from './BasePaymentForm.vue';
+import CardPaymentForm from './payment/CardPaymentForm.vue';
+import BasePaymentForm from './payment/BasePaymentForm.vue';
 
 defineProps<{
   paymentMethod: PaymentMethod,

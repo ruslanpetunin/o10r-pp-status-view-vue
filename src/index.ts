@@ -16,5 +16,7 @@ export default {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             app.component(key, (components as any)[key]);
         }
+
+        return app;
     }
 };

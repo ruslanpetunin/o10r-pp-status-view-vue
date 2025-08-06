@@ -79,12 +79,12 @@
 </template>
 
 <script setup lang="ts">
-import type { PaymentMethodField, Translate } from 'orchestrator-pp-core';
+import type { Field, Translate } from 'orchestrator-pp-core';
 import type { PaymentMethod } from 'orchestrator-pp-payment-method';
 import { isSavedCardPaymentMethod } from 'orchestrator-pp-payment-method';
 import { PPInput } from "orchestrator-pp-vue-ui-kit";
 import { ref, onMounted } from 'vue';
-import usePaymentForm from './../../composable/usePaymentForm';
+import useForm from './../../../composable/useForm';
 
 type CardFieldsConfig = {
   showPan: boolean;
@@ -92,7 +92,7 @@ type CardFieldsConfig = {
   showCvv: boolean;
   showCardholder: boolean;
   expiryDisabled: boolean;
-  otherFields: PaymentMethodField[]
+  otherFields: Field[]
 };
 
 const props = defineProps<{
@@ -115,7 +115,7 @@ const {
   formValidationResult,
   validationErrors,
   isPPInputType
-} = usePaymentForm(props.translate);
+} = useForm(props.translate);
 
 const {
   showPan,

@@ -1,6 +1,6 @@
 <template>
   <form action="" ref="formRef" @submit.prevent="handleSubmit" @input="validateForm">
-    <template v-for="field of paymentMethod.paymentForm.fields" :key="field.name">
+    <template v-for="field of form.paymentForm.fields" :key="field.name">
       <PPInput
         v-if="isPPInputType(field.type)"
         :label="translate(`l_${field.name}`)"
@@ -18,20 +18,22 @@
 </template>
 
 <script setup lang="ts">
-import type { Translate } from "orchestrator-pp-core";
-import type { PaymentMethod } from "orchestrator-pp-payment-method";
-import { PPInput } from "orchestrator-pp-vue-ui-kit";
-import { onMounted } from 'vue';
-import usePaymentForm from './../../composable/usePaymentForm';
+import type { Clarification, Translate } from 'orchestrator-pp-core';
+import { useForm as buildFormConfig } from 'orchestrator-pp-payment-method';
+import useForm from './../../composable/useForm';
+import { PPInput } from 'orchestrator-pp-vue-ui-kit'
+import { onMounted } from 'vue'
 
 const props = defineProps<{
-  paymentMethod: PaymentMethod,
+  paymentStatus: Clarification
   translate: Translate
 }>();
 
 const emit = defineEmits<{
-  (event: 'pay', data: Record<string, unknown>): void;
+  (event: 'clarify', data: Record<string, unknown>): void
 }>();
+
+const form = buildFormConfig(props.paymentStatus.clarification_fields);
 
 const {
   formRef,
@@ -39,28 +41,13 @@ const {
   touched,
   formValidationResult,
   validationErrors,
+  getFormData,
   isPPInputType
-} = usePaymentForm(props.translate);
-
-function getFormData(): Record<string, unknown> {
-  const data: Record<string, unknown> = {};
-
-  if (!formRef.value) {
-    return data;
-  } else {
-    const formData = new FormData(formRef.value);
-
-    formData.forEach((value, key) => {
-      data[key] = value
-    });
-
-    return data;
-  }
-}
+} = useForm(props.translate);
 
 async function validateForm(): Promise<void> {
   formValidationResult.value.isValid = false;
-  formValidationResult.value = await props.paymentMethod.paymentForm.validate(getFormData());
+  formValidationResult.value = await form.paymentForm.validate(getFormData());
 }
 
 async function handleSubmit() {
@@ -68,8 +55,7 @@ async function handleSubmit() {
 
   submitted.value = true;
 
-  await props.paymentMethod.paymentForm.onSubmit(formData);
-  emit('pay', formData);
+  emit('clarify', formData);
 }
 
 onMounted(validateForm);

@@ -38,12 +38,30 @@ export default function(translate: Translate) {
     }
   );
 
+  function getFormData(): Record<string, unknown> {
+    const data: Record<string, unknown> = {};
+
+    if (!formRef.value) {
+      return data;
+    } else {
+      const formData = new FormData(formRef.value);
+
+      formData.forEach((value, key) => {
+        data[key] = value
+      });
+
+      return data;
+    }
+  }
+
   return {
     formRef,
     submitted,
     touched,
     formValidationResult,
     validationErrors,
+
+    getFormData,
 
     isPPInputType
   };
