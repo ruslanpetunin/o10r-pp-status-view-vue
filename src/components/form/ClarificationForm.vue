@@ -18,20 +18,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Clarification, Translate } from 'o10r-pp-core';
+import type { Clarification, Translator } from 'o10r-pp-core'
 import { useForm as buildFormConfig } from 'o10r-pp-payment-method';
 import useForm from './../../composable/useForm';
 import { PPInput } from 'o10r-pp-ui-kit-vue';
-import { onMounted } from 'vue';
+import { inject, onMounted } from 'vue'
 
 const props = defineProps<{
   paymentStatus: Clarification
-  translate: Translate
 }>();
 
 const emit = defineEmits<{
   (event: 'clarify', data: Record<string, unknown>): void
 }>();
+
+const { translate } = inject('translator') as Translator;
 
 const form = buildFormConfig(props.paymentStatus.clarification_fields);
 
@@ -43,7 +44,7 @@ const {
   validationErrors,
   getFormData,
   isPPInputType
-} = useForm(props.translate);
+} = useForm(translate);
 
 async function validateForm(): Promise<void> {
   formValidationResult.value.isValid = false;

@@ -1,10 +1,11 @@
 <template>
-  <slot :redirect="runRedirect" />
+  <slot v-if="!isCascading || cascadingAccepted" :redirect="runRedirect" />
+  <CascadingForm v-if="isCascading" :paymentStatus="paymentStatus" @accepted="cascadingAccepted = true" />
 </template>
 
 <script setup lang="ts">
 import useRedirect from './../../composable/useRedirect';
-import type { ThreeDS } from 'o10r-pp-core';
+import type { ThreeDS, Account } from 'o10r-pp-core';
 import { ref } from 'vue';
 
 defineSlots<{
@@ -12,12 +13,15 @@ defineSlots<{
 }>();
 
 const props = defineProps<{
-  paymentStatus: ThreeDS
+  paymentStatus: ThreeDS & Account
 }>();
 
 const { createHiddenForm, createWindow } = useRedirect();
 const runRedirect = ref<() => void>();
 const threeds = props.paymentStatus.threeds;
+
+const isCascading = 'is_cascading' in props.paymentStatus.threeds && props.paymentStatus.threeds.is_cascading;
+const cascadingAccepted = ref<boolean>(false);
 
 function createHiddenIframe(): HTMLIFrameElement {
   const iframeName: string = 'i_' + Date.now() + Math.floor(Math.random() * 100000).toString();

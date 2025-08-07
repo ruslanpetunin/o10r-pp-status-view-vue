@@ -16,7 +16,7 @@
     "paths": {
       "o10r-pp-core": ["./../o10r-pp-core/src", "o10r-pp-core"],
       "o10r-pp-payment-method": ["./../o10r-pp-payment-method/src", "o10r-pp-payment-method"],
-      "orchestrator-pp-payment-form": ["./../orchestrator-pp-payment-form/src", "orchestrator-pp-payment-form"],
+      "o10r-pp-form": ["./../o10r-pp-form/src", "o10r-pp-form"],
       "o10r-pp-ui-kit-vue": ["./../o10r-pp-ui-kit-vue/src", "o10r-pp-ui-kit-vue"]
     }
   },

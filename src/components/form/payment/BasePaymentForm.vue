@@ -18,20 +18,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Translate } from "o10r-pp-core";
+import type { Translator } from 'o10r-pp-core'
 import type { PaymentMethod } from "o10r-pp-payment-method";
 import { PPInput } from "o10r-pp-ui-kit-vue";
-import { onMounted } from 'vue';
+import { inject, onMounted } from 'vue'
 import useForm from './../../../composable/useForm';
 
 const props = defineProps<{
   paymentMethod: PaymentMethod,
-  translate: Translate
 }>();
 
 const emit = defineEmits<{
   (event: 'pay', data: Record<string, unknown>): void;
 }>();
+
+const { translate } = inject('translator') as Translator;
 
 const {
   formRef,
@@ -41,7 +42,7 @@ const {
   validationErrors,
   getFormData,
   isPPInputType
-} = useForm(props.translate);
+} = useForm(translate);
 
 async function validateForm(): Promise<void> {
   formValidationResult.value.isValid = false;

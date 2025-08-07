@@ -79,11 +79,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Field, Translate } from 'o10r-pp-core';
+import type { Field, Translator } from 'o10r-pp-core'
 import type { PaymentMethod } from 'o10r-pp-payment-method';
 import { isSavedCardPaymentMethod } from 'o10r-pp-payment-method';
 import { PPInput } from "o10r-pp-ui-kit-vue";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue'
 import useForm from './../../../composable/useForm';
 
 type CardFieldsConfig = {
@@ -96,14 +96,15 @@ type CardFieldsConfig = {
 };
 
 const props = defineProps<{
-  paymentMethod: PaymentMethod,
-  translate: Translate
+  paymentMethod: PaymentMethod
 }>();
 
 const emit = defineEmits<{
   (event: 'pay', data: Record<string, unknown>): void;
   (event: 'removed'): void;
 }>();
+
+const { translate } = inject('translator') as Translator;
 
 const isSavedCardForm = isSavedCardPaymentMethod(props.paymentMethod);
 const unmaskedValues = ref<Record<string, string>>({});
@@ -115,7 +116,7 @@ const {
   formValidationResult,
   validationErrors,
   isPPInputType
-} = useForm(props.translate);
+} = useForm(translate);
 
 const {
   showPan,
