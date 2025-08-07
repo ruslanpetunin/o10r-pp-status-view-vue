@@ -1,1 +1,1 @@
-# orchestrator-pp-vue-view
+# o10r-pp-status-view-vue

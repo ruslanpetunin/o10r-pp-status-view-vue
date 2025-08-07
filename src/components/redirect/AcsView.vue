@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import useRedirect from './../../composable/useRedirect';
-import type { ThreeDS } from 'orchestrator-pp-core';
+import type { ThreeDS } from 'o10r-pp-core';
 import { ref } from 'vue';
 
 defineSlots<{

@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
-import type { FormValidationResult } from 'orchestrator-pp-payment-method';
-import type { Translate } from 'orchestrator-pp-core';
+import type { FormValidationResult } from 'o10r-pp-payment-method';
+import type { Translate } from 'o10r-pp-core';
 
 function isPPInputType(type: string): type is 'text' | 'number' | 'email' | 'password' | 'tel' {
   return ['text', 'number', 'email', 'password', 'tel'].includes(type);

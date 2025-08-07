@@ -1,12 +1,12 @@
 import type { App, FunctionPlugin } from 'vue';
-import PpUiKit from 'orchestrator-pp-vue-ui-kit';
+import PpUiKit from 'o10r-pp-ui-kit-vue';
 import * as components from './components';
 
-import 'orchestrator-pp-vue-ui-kit/style.css';
+import 'o10r-pp-ui-kit-vue/style.css';
 import './style.css';
 
 export * from './components';
-export * from 'orchestrator-pp-vue-ui-kit';
+export * from 'o10r-pp-ui-kit-vue';
 
 const connect: FunctionPlugin = (app: App) => {
   app.use(PpUiKit);

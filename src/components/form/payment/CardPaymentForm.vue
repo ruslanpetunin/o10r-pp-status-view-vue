@@ -79,10 +79,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Field, Translate } from 'orchestrator-pp-core';
-import type { PaymentMethod } from 'orchestrator-pp-payment-method';
-import { isSavedCardPaymentMethod } from 'orchestrator-pp-payment-method';
-import { PPInput } from "orchestrator-pp-vue-ui-kit";
+import type { Field, Translate } from 'o10r-pp-core';
+import type { PaymentMethod } from 'o10r-pp-payment-method';
+import { isSavedCardPaymentMethod } from 'o10r-pp-payment-method';
+import { PPInput } from "o10r-pp-ui-kit-vue";
 import { ref, onMounted } from 'vue';
 import useForm from './../../../composable/useForm';
 

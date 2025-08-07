@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import useRedirect from './../../composable/useRedirect';
-import type { Redirect } from 'orchestrator-pp-core';
+import type { Redirect } from 'o10r-pp-core';
 import { ref } from 'vue';
 
 defineSlots<{

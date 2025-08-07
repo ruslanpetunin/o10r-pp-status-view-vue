@@ -18,10 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Clarification, Translate } from 'orchestrator-pp-core';
-import { useForm as buildFormConfig } from 'orchestrator-pp-payment-method';
+import type { Clarification, Translate } from 'o10r-pp-core';
+import { useForm as buildFormConfig } from 'o10r-pp-payment-method';
 import useForm from './../../composable/useForm';
-import { PPInput } from 'orchestrator-pp-vue-ui-kit';
+import { PPInput } from 'o10r-pp-ui-kit-vue';
 import { onMounted } from 'vue';
 
 const props = defineProps<{
