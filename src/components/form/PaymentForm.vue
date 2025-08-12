@@ -2,23 +2,37 @@
   <CardPaymentForm
     v-if="paymentMethod.code === 'card'"
     :paymentMethod="paymentMethod"
+    :showPayButton="showPayButton"
     @pay="$emit('pay', $event)"
     @removed="$emit('removed')"
+    @input="$emit('input', $event)"
   />
-  <BasePaymentForm v-else :paymentMethod="paymentMethod" @pay="$emit('pay', $event)" />
+  <BasePaymentForm
+    v-else
+    :paymentMethod="paymentMethod"
+    :showPayButton="showPayButton"
+    @pay="$emit('pay', $event)"
+    @input="$emit('input', $event)"
+  />
 </template>
 
 <script setup lang="ts">
-import type { PaymentMethod } from "o10r-pp-payment-method";
+import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method'
 import CardPaymentForm from './payment/CardPaymentForm.vue';
 import BasePaymentForm from './payment/BasePaymentForm.vue';
 
-defineProps<{
-  paymentMethod: PaymentMethod
-}>();
+withDefaults(
+  defineProps<{
+    paymentMethod: PaymentMethod,
+    showPayButton: boolean
+  }>(), {
+    showPayButton: true
+  }
+);
 
 defineEmits<{
   (event: 'pay', data: Record<string, unknown>): void;
   (event: 'removed'): void;
+  (event: 'input', data: { data: Record<string, unknown>, validation: FormValidationResult }): void;
 }>();
 </script>

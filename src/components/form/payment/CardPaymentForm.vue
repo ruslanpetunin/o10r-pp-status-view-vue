@@ -63,7 +63,7 @@
         class="pp-input"
       />
     </template>
-    <PPButton class="pp-button" :disabled="!formValidationResult.isValid || submitted">
+    <PPButton v-if="showPayButton" class="pp-button" :disabled="!formValidationResult.isValid || submitted">
       {{ translate(`b_pay`) }}
     </PPButton>
     <PPButton
@@ -79,8 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Field, Translator } from 'o10r-pp-core'
-import type { PaymentMethod } from 'o10r-pp-payment-method';
+import type { Field, Translator } from 'o10r-pp-core';
+import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
 import { isSavedCardPaymentMethod } from 'o10r-pp-payment-method';
 import { PPInput } from "o10r-pp-ui-kit-vue";
 import { ref, onMounted, inject } from 'vue'
@@ -96,12 +96,14 @@ type CardFieldsConfig = {
 };
 
 const props = defineProps<{
-  paymentMethod: PaymentMethod
+  paymentMethod: PaymentMethod,
+  showPayButton: boolean
 }>();
 
 const emit = defineEmits<{
   (event: 'pay', data: Record<string, unknown>): void;
   (event: 'removed'): void;
+  (event: 'input', data: { data: Record<string, unknown>, validation: FormValidationResult }): void;
 }>();
 
 const { translate } = inject('translator') as Translator;
@@ -184,8 +186,12 @@ function getFormData(): Record<string, unknown> {
 }
 
 async function validateForm(): Promise<void> {
+  const formData = getFormData();
+
   formValidationResult.value.isValid = false;
-  formValidationResult.value = await props.paymentMethod.paymentForm.validate(getFormData());
+  formValidationResult.value = await props.paymentMethod.paymentForm.validate(formData);
+
+  emit('input', { data: formData, validation: formValidationResult.value });
 
   if (formValidationResult.value.errors['expiry_month'] || formValidationResult.value.errors['expiry_year']) {
     formValidationResult.value.errors['expiry'] = Object.assign({}, formValidationResult.value.errors['expiry_month'], formValidationResult.value.errors['expiry_year']);
