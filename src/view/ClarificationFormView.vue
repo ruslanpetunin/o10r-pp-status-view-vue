@@ -18,11 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Clarification, Translator } from 'o10r-pp-core'
+import type { Clarification, Translator } from 'o10r-pp-core';
 import { useForm as buildFormConfig } from 'o10r-pp-payment-method';
-import useForm from './../../composable/useForm';
+import useForm from './../composable/useForm';
 import { PPInput } from 'o10r-pp-ui-kit-vue';
-import { inject, onMounted } from 'vue'
+import { inject, onMounted } from 'vue';
 
 const props = defineProps<{
   paymentStatus: Clarification

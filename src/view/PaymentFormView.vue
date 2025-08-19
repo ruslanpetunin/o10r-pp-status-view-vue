@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method'
-import CardPaymentForm from './payment/CardPaymentForm.vue';
-import BasePaymentForm from './payment/BasePaymentForm.vue';
+import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
+import CardPaymentForm from './../components/form/payment/CardPaymentForm.vue';
+import BasePaymentForm from './../components/form/payment/BasePaymentForm.vue';
 
 withDefaults(
   defineProps<{

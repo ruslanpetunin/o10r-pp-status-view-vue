@@ -10,9 +10,10 @@
 </template>
 
 <script setup lang="ts">
-import useRedirect from './../../composable/useRedirect';
+import useRedirect from './../composable/useRedirect';
+import CascadingForm from './../components/form/CascadingForm.vue';
 import type { ThreeDS, Account } from 'o10r-pp-core';
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue';
 
 defineSlots<{
   default(props: { redirect?: () => void }): unknown;

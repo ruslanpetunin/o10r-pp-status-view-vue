@@ -45,9 +45,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Account, ThreeDS, Translator } from 'o10r-pp-core'
+import type { Account, ThreeDS, Translator } from 'o10r-pp-core';
 import { PPInput } from 'o10r-pp-ui-kit-vue';
-import { inject, ref } from 'vue'
+import { inject, ref } from 'vue';
 
 defineProps<{
   paymentStatus: ThreeDS & Account

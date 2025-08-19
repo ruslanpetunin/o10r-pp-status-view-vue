@@ -1,12 +1,12 @@
 import type { App, FunctionPlugin } from 'vue';
 import PpUiKit from 'o10r-pp-ui-kit-vue';
 import type { Translator } from 'o10r-pp-core';
-import * as components from './components';
+import * as components from './views';
 
 import 'o10r-pp-ui-kit-vue/style.css';
 import './style.css';
 
-export * from './components';
+export * from './views';
 export * from 'o10r-pp-ui-kit-vue';
 
 const connect: FunctionPlugin = (app: App, translator: Translator) => {

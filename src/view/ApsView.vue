@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import useRedirect from './../../composable/useRedirect';
+import useRedirect from './../composable/useRedirect';
 import type { Redirect } from 'o10r-pp-core';
 import { onMounted, ref } from 'vue'
 
