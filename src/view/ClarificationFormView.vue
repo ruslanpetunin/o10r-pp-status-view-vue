@@ -18,14 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Clarification, Translator } from 'o10r-pp-core';
+import type { ClarificationSection, Translator } from 'o10r-pp-core';
 import { useForm as buildFormConfig } from 'o10r-pp-payment-method';
 import useForm from './../composable/useForm';
 import { PPInput } from 'o10r-pp-ui-kit-vue';
 import { inject, onMounted } from 'vue';
 
 const props = defineProps<{
-  paymentStatus: Clarification
+  paymentStatus: ClarificationSection
 }>();
 
 const emit = defineEmits<{
@@ -34,7 +34,7 @@ const emit = defineEmits<{
 
 const { translate } = inject('translator') as Translator;
 
-const form = buildFormConfig(props.paymentStatus.clarification_fields);
+const form = buildFormConfig(props.paymentStatus.clarification);
 
 const {
   formRef,

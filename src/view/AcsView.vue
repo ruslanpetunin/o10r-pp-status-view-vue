@@ -1,7 +1,7 @@
 <template>
   <template v-if="!isCascading || cascadingAccepted">
     <slot v-if="mode === 'new-window'" :redirect="runRedirect" />
-    <Teleport v-if="mode === 'iframe'" to="body">
+    <Teleport v-if="mode === 'iframe' && !isHiddenIframe" to="body">
       <iframe ref="iframe" name="acs"></iframe>
     </Teleport>
   </template>
@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import useRedirect from './../composable/useRedirect';
 import CascadingForm from './../components/form/CascadingForm.vue';
-import type { ThreeDS, Account } from 'o10r-pp-core';
+import type { AccountSection, AcsSection } from 'o10r-pp-core';
 import { nextTick, onMounted, ref } from 'vue';
 
 defineSlots<{
@@ -21,20 +21,23 @@ defineSlots<{
 
 const props = withDefaults(
   defineProps<{
-    mode?: 'new-window' | 'iframe';
-    paymentStatus: ThreeDS & Account;
+    mode?: 'new-window' | 'iframe' | 'current-window';
+    paymentStatus: AcsSection & AccountSection;
   }>(),
   {
     mode: 'iframe',
+    // mode: 'new-window',
+    // mode: 'current-window',
   }
 );
 
 const { createHiddenForm, createWindow } = useRedirect();
 const runRedirect = ref<() => void>();
-const threeds = props.paymentStatus.threeds;
+const acs = props.paymentStatus.acs;
 
 const iframe = ref<HTMLIFrameElement>();
-const isCascading = 'is_cascading' in props.paymentStatus.threeds && props.paymentStatus.threeds.is_cascading;
+const isHiddenIframe = 'iframe' in acs;
+const isCascading = 'is_cascading' in acs && acs.is_cascading;
 const cascadingAccepted = ref<boolean>(false);
 
 function createHiddenIframe(): HTMLIFrameElement {
@@ -64,20 +67,20 @@ function autoRunRedirect() {
   }
 }
 
-if ('iframe' in threeds) {
-  const iframe = createHiddenIframe();
-  const form = createHiddenForm(threeds.iframe.url, 'POST', threeds.iframe.params);
+if (isHiddenIframe) {
+  const hiddenIframe = createHiddenIframe();
+  const form = createHiddenForm(acs.iframe.url, acs.iframe.method, acs.iframe.body || {});
 
-  form.target = iframe.name;
+  form.target = hiddenIframe.name;
 
-  document.body.appendChild(iframe);
+  document.body.appendChild(hiddenIframe);
   document.body.appendChild(form);
 
   form.submit();
   form.remove();
 } else if (props.mode === 'iframe') {
   runRedirect.value = () => {
-    const form = createHiddenForm(threeds.redirect.url, 'POST', threeds.redirect.params);
+    const form = createHiddenForm(acs.redirect.url, acs.redirect.method, acs.redirect.body || {});
 
     if (iframe.value) {
       form.target = iframe.value.name;
@@ -94,7 +97,7 @@ if ('iframe' in threeds) {
 } else if (props.mode === 'new-window') {
   runRedirect.value = () => {
     const { name } = createWindow();
-    const form = createHiddenForm(threeds.redirect.url, 'POST', threeds.redirect.params);
+    const form = createHiddenForm(acs.redirect.url, acs.redirect.method, acs.redirect.body || {});
 
     form.target = name;
 
@@ -105,6 +108,13 @@ if ('iframe' in threeds) {
 
     runRedirect.value = undefined;
   };
+} else if (props.mode === 'current-window') {
+  const form = createHiddenForm(acs.redirect.url, acs.redirect.method, acs.redirect.body || {});
+
+  document.body.appendChild(form);
+
+  form.submit();
+  form.remove();
 }
 
 onMounted(
@@ -125,5 +135,6 @@ iframe {
   width: 100%;
   height: 100%;
   z-index: 10000;
+  border: none;
 }
 </style>

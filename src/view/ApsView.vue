@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import useRedirect from './../composable/useRedirect';
-import type { Redirect } from 'o10r-pp-core';
+import type { ApsSection } from 'o10r-pp-core';
 import { onMounted, ref } from 'vue'
 
 defineSlots<{
@@ -17,7 +17,7 @@ defineSlots<{
 const props = withDefaults(
   defineProps<{
     mode?: 'new-window' | 'iframe';
-    paymentStatus: Redirect
+    paymentStatus: ApsSection
   }>(),
   {
     mode: 'iframe',
@@ -26,7 +26,7 @@ const props = withDefaults(
 
 const { createHiddenForm, createWindow } = useRedirect();
 const runRedirect = ref<() => void>();
-const redirectConfig = props.paymentStatus.redirect;
+const redirectConfig = props.paymentStatus.aps.redirect;
 const iframe = ref<HTMLIFrameElement>();
 
 function autoRunRedirect() {
@@ -37,7 +37,7 @@ function autoRunRedirect() {
 
 if (props.mode === 'iframe') {
   runRedirect.value = () => {
-    const form = createHiddenForm(redirectConfig.url, redirectConfig.method, redirectConfig.params || {});
+    const form = createHiddenForm(redirectConfig.url, redirectConfig.method, redirectConfig.body || {});
 
     if (iframe.value) {
       form.target = iframe.value.name;
@@ -53,7 +53,7 @@ if (props.mode === 'iframe') {
 } else if (props.mode === 'new-window') {
   runRedirect.value = () => {
     const { name } = createWindow();
-    const form = createHiddenForm(redirectConfig.url, redirectConfig.method, redirectConfig.params || {});
+    const form = createHiddenForm(redirectConfig.url, redirectConfig.method, redirectConfig.body || {});
 
     form.target = name;
 
@@ -78,5 +78,6 @@ iframe {
   width: 100%;
   height: 100%;
   z-index: 10000;
+  border: none;
 }
 </style>
