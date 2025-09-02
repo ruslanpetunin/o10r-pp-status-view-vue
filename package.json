@@ -1,6 +1,6 @@
 {
   "name": "o10r-pp-status-view-vue",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "main": "dist/o10r-pp-status-view-vue.umd.js",
   "module": "dist/o10r-pp-status-view-vue.es.js",
   "types": "dist/index.d.ts",
