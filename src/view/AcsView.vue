@@ -14,6 +14,7 @@ import useRedirect from './../composable/useRedirect';
 import CascadingForm from './../components/form/CascadingForm.vue';
 import type { AccountSection, AcsSection } from 'o10r-pp-core';
 import { nextTick, onMounted, ref } from 'vue';
+import type { RedirectMode } from "./../types/redirect";
 
 defineSlots<{
   default(props: { redirect?: () => void }): unknown;
@@ -21,7 +22,7 @@ defineSlots<{
 
 const props = withDefaults(
   defineProps<{
-    mode?: 'new-window' | 'iframe' | 'current-window';
+    mode?: RedirectMode;
     paymentStatus: AcsSection & AccountSection;
   }>(),
   {
@@ -31,14 +32,16 @@ const props = withDefaults(
   }
 );
 
-const { createHiddenForm, createWindow } = useRedirect();
-const runRedirect = ref<() => void>();
 const acs = props.paymentStatus.acs;
-
-const iframe = ref<HTMLIFrameElement>();
 const isHiddenIframe = 'iframe' in acs;
 const isCascading = 'is_cascading' in acs && acs.is_cascading;
 const cascadingAccepted = ref<boolean>(false);
+
+const { iframe, runRedirect, autoRunRedirect, createHiddenForm } = useRedirect(
+  isHiddenIframe ? acs.iframe : acs.redirect,
+  props.mode
+);
+
 
 function createHiddenIframe(): HTMLIFrameElement {
   const iframeName: string = 'i_' + Date.now() + Math.floor(Math.random() * 100000).toString();
@@ -61,56 +64,14 @@ function onCascadingAccepted() {
   nextTick(autoRunRedirect);
 }
 
-function autoRunRedirect() {
-  if (props.mode !== 'new-window' && runRedirect.value) {
-    runRedirect.value();
-  }
-}
-
 if (isHiddenIframe) {
   const hiddenIframe = createHiddenIframe();
   const form = createHiddenForm(acs.iframe.url, acs.iframe.method, acs.iframe.body || {});
 
+  runRedirect.value = undefined;
   form.target = hiddenIframe.name;
 
   document.body.appendChild(hiddenIframe);
-  document.body.appendChild(form);
-
-  form.submit();
-  form.remove();
-} else if (props.mode === 'iframe') {
-  runRedirect.value = () => {
-    const form = createHiddenForm(acs.redirect.url, acs.redirect.method, acs.redirect.body || {});
-
-    if (iframe.value) {
-      form.target = iframe.value.name;
-
-      document.body.appendChild(iframe.value);
-      document.body.appendChild(form);
-
-      form.submit();
-      form.remove();
-
-      runRedirect.value = undefined;
-    }
-  };
-} else if (props.mode === 'new-window') {
-  runRedirect.value = () => {
-    const { name } = createWindow();
-    const form = createHiddenForm(acs.redirect.url, acs.redirect.method, acs.redirect.body || {});
-
-    form.target = name;
-
-    document.body.appendChild(form);
-
-    form.submit();
-    form.remove();
-
-    runRedirect.value = undefined;
-  };
-} else if (props.mode === 'current-window') {
-  const form = createHiddenForm(acs.redirect.url, acs.redirect.method, acs.redirect.body || {});
-
   document.body.appendChild(form);
 
   form.submit();
