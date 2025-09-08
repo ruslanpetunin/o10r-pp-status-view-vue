@@ -70,7 +70,6 @@
       v-if="isSavedCardForm"
       class="pp-button-remove"
       type="button"
-      :disabled="submitted"
       @click="handleRemoveCard"
     >
       {{ translate(`b_remove`) }}

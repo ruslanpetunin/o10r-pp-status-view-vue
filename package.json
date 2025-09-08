@@ -32,8 +32,8 @@
     "vue-tsc": "^3.0.1"
   },
   "dependencies": {
-    "o10r-pp-core": "^0.5.1",
-    "o10r-pp-payment-method": "^0.1.1",
-    "o10r-pp-ui-kit-vue": "^0.3.0"
+    "o10r-pp-core": "^0.5.7",
+    "o10r-pp-payment-method": "^0.1.4",
+    "o10r-pp-ui-kit-vue": "^0.3.1"
   }
 }
