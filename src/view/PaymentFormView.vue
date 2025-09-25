@@ -24,7 +24,7 @@ import BasePaymentForm from './../components/form/payment/BasePaymentForm.vue';
 withDefaults(
   defineProps<{
     paymentMethod: PaymentMethod,
-    showPayButton: boolean
+    showPayButton?: boolean
   }>(), {
     showPayButton: true
   }

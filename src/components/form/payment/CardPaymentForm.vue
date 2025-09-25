@@ -1,5 +1,7 @@
 <template>
   <form action="" ref="formRef" @submit.prevent="handleSubmit" @input="validateForm">
+
+    <div class="pp-form-header">{{ translate('t_card_information') }}</div>
     <PPInput
       v-if="showPan"
       class="pp-input"
@@ -11,8 +13,8 @@
       @input="unmaskedValues.pan = $event"
       @blur="touched.push('pan')"
     />
-    <div class="row">
-      <div class="column">
+    <div class="pp-form-row">
+      <div class="pp-form-col">
         <PPInput
           v-if="showExpiry"
           class="pp-input"
@@ -27,7 +29,7 @@
           @blur="touched.push('expiry')"
         />
       </div>
-      <div class="column">
+      <div class="pp-form-col">
         <PPInput
           v-if="showCvv"
           class="pp-input"
@@ -52,17 +54,21 @@
       @input="unmaskedValues.cardholder = $event"
       @blur="touched.push('cardholder')"
     />
-    <template v-for="field of otherFields" :key="field.name">
-      <PPInput
-        v-if="isPPInputType(field.type)"
-        :label="translate(`l_${field.name}`)"
-        :type="field.type"
-        :name="field.name"
-        @blur="touched.push(field.name)"
-        :error="validationErrors[field.name]"
-        class="pp-input"
+    <PaymentFieldGroup
+      :fields="otherFields"
+      :validationErrors="validationErrors"
+      @blur="touched.push($event)"
+    />
+
+    <div v-if="billingFields.length" class="pp-billing-fields">
+      <div class="pp-form-header">{{ translate('t_billing_address') }}</div>
+      <PaymentFieldGroup
+        :fields="billingFields"
+        :validationErrors="validationErrors"
+        @blur="touched.push($event)"
       />
-    </template>
+    </div>
+
     <PPButton v-if="showPayButton" class="pp-button" :disabled="!formValidationResult.isValid || submitted">
       {{ translate(`b_pay`) }}
     </PPButton>
@@ -74,16 +80,19 @@
     >
       {{ translate(`b_remove`) }}
     </PPButton>
+
   </form>
 </template>
 
 <script setup lang="ts">
+import { useBillingFields } from 'o10r-pp-core';
 import type { Field, Translator } from 'o10r-pp-core';
 import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
 import { isSavedCardPaymentMethod } from 'o10r-pp-payment-method';
 import { PPInput } from "o10r-pp-ui-kit-vue";
 import { ref, onMounted, inject } from 'vue'
 import useForm from './../../../composable/useForm';
+import PaymentFieldGroup from './../../../components/field/PaymentFieldGroup.vue';
 
 type CardFieldsConfig = {
   showPan: boolean;
@@ -91,7 +100,8 @@ type CardFieldsConfig = {
   showCvv: boolean;
   showCardholder: boolean;
   expiryDisabled: boolean;
-  otherFields: Field[]
+  billingFields: Field[];
+  otherFields: Field[];
 };
 
 const props = defineProps<{
@@ -115,9 +125,11 @@ const {
   submitted,
   touched,
   formValidationResult,
-  validationErrors,
-  isPPInputType
+  validationErrors
 } = useForm(translate);
+
+
+const billingFieldsNames = useBillingFields().map(field => field.name);
 
 const {
   showPan,
@@ -125,6 +137,7 @@ const {
   showCvv,
   showCardholder,
   expiryDisabled,
+  billingFields,
   otherFields
 } = props.paymentMethod.paymentForm.fields.reduce<CardFieldsConfig>(
   (acc, field) => {
@@ -150,13 +163,15 @@ const {
       acc.showCvv = true;
     } else if (field.name === 'cardholder') {
       acc.showCardholder = true;
+    } else if (billingFieldsNames.includes(field.name)) {
+      acc.billingFields.push(field);
     } else {
       acc.otherFields.push(field);
     }
 
     return acc;
   },
-  { showPan: false, showExpiry: false, showCvv: false, showCardholder: false, expiryDisabled: false, otherFields: [] }
+  { showPan: false, showExpiry: false, showCvv: false, showCardholder: false, expiryDisabled: false, billingFields: [], otherFields: [] }
 );
 
 function getFormData(): Record<string, unknown> {
@@ -214,15 +229,3 @@ async function handleSubmit() {
 
 onMounted(validateForm);
 </script>
-
-<style scoped>
-.row {
-  display: flex;
-  margin-bottom: var(--pp-gap-sm);
-  gap: var(--pp-gap-sm);
-}
-
-.column {
-  width: 50%;
-}
-</style>

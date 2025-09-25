@@ -1,17 +1,11 @@
 <template>
   <form action="" ref="formRef" @submit.prevent="handleSubmit" @input="validateForm">
     <p v-if="!paymentMethod.paymentForm.fields.length">{{ translate('t_proceed_payment') }}</p>
-    <template v-for="field of paymentMethod.paymentForm.fields" :key="field.name">
-      <PPInput
-        v-if="isPPInputType(field.type)"
-        :label="translate(`l_${field.name}`)"
-        :type="field.type"
-        :name="field.name"
-        @blur="touched.push(field.name)"
-        :error="validationErrors[field.name]"
-        class="pp-input"
-      />
-    </template>
+    <PaymentFieldGroup
+      :fields="paymentMethod.paymentForm.fields"
+      :validationErrors="validationErrors"
+      @blur="touched.push($event)"
+    />
     <PPButton v-if="showPayButton" class="pp-button" :disabled="!formValidationResult.isValid || submitted">
       {{ translate(`b_pay`) }}
     </PPButton>
@@ -21,9 +15,9 @@
 <script setup lang="ts">
 import type { Translator } from 'o10r-pp-core';
 import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
-import { PPInput } from "o10r-pp-ui-kit-vue";
 import { inject, onMounted } from 'vue';
 import useForm from './../../../composable/useForm';
+import PaymentFieldGroup from './../../../components/field/PaymentFieldGroup.vue';
 
 const props = defineProps<{
   paymentMethod: PaymentMethod,
@@ -43,8 +37,7 @@ const {
   touched,
   formValidationResult,
   validationErrors,
-  getFormData,
-  isPPInputType
+  getFormData
 } = useForm(translate);
 
 async function validateForm(): Promise<void> {

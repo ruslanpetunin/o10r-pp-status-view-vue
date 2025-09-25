@@ -1,3 +1,20 @@
+.pp-form-header {
+  color: var(--pp-secondary-accent-color);
+  font-size: var(--pp-font-size-sm);
+  font-weight: var(--pp-font-weight-bold);
+  margin-bottom: var(--pp-gap-sm);
+}
+
+.pp-form-row {
+  display: flex;
+  margin-bottom: var(--pp-gap-sm);
+  gap: var(--pp-gap-sm);
+}
+
+.pp-form-col {
+  width: 50%;
+}
+
 .pp-input:not(:last-of-type) {
   margin-bottom: var(--pp-gap-sm);
 }
@@ -15,4 +32,8 @@
   margin-top: var(--pp-gap-sm);
   border: none;
   background: transparent;
+}
+
+.pp-billing-fields {
+  margin-top: var(--pp-gap-md);
 }
