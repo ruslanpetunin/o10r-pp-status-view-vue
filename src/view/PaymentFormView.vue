@@ -2,6 +2,7 @@
   <CardPaymentForm
     v-if="paymentMethod.code === 'card'"
     :paymentMethod="paymentMethod"
+    :shippingData="shippingData"
     :showPayButton="showPayButton"
     @pay="$emit('pay', $event)"
     @removed="$emit('removed')"
@@ -10,6 +11,7 @@
   <BasePaymentForm
     v-else
     :paymentMethod="paymentMethod"
+    :shippingData="shippingData"
     :showPayButton="showPayButton"
     @pay="$emit('pay', $event)"
     @input="$emit('input', $event)"
@@ -24,6 +26,7 @@ import BasePaymentForm from './../components/form/payment/BasePaymentForm.vue';
 withDefaults(
   defineProps<{
     paymentMethod: PaymentMethod,
+    shippingData?: Record<string, unknown>,
     showPayButton?: boolean
   }>(), {
     showPayButton: true

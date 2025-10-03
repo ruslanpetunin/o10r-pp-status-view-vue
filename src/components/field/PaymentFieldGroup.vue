@@ -8,6 +8,7 @@
   />
   <BillingFieldGroup
     :fields="billingFields"
+    :shippingData="shippingData"
     :validationErrors="validationErrors"
     @blur="$emit('blur', $event)"
   />
@@ -25,7 +26,8 @@ type PaymentFieldsConfig = {
 };
 
 const props = defineProps<{
-  fields: Field[]
+  fields: Field[],
+  shippingData?: Record<string, unknown>,
   validationErrors: Record<string, string>
 }>();
 

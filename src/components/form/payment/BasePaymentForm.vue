@@ -3,6 +3,7 @@
     <p v-if="!paymentMethod.paymentForm.fields.length">{{ translate('t_proceed_payment') }}</p>
     <PaymentFieldGroup
       :fields="paymentMethod.paymentForm.fields"
+      :shippingData="shippingData"
       :validationErrors="validationErrors"
       @blur="touched.push($event)"
     />
@@ -15,12 +16,13 @@
 <script setup lang="ts">
 import type { Translator } from 'o10r-pp-core';
 import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
-import { inject, onMounted } from 'vue';
+import { inject, onMounted, watch, nextTick } from 'vue';
 import useForm from './../../../composable/useForm';
 import PaymentFieldGroup from './../../../components/field/PaymentFieldGroup.vue';
 
 const props = defineProps<{
   paymentMethod: PaymentMethod,
+  shippingData?: Record<string, unknown>,
   showPayButton: boolean
 }>();
 
@@ -58,5 +60,6 @@ async function handleSubmit() {
   emit('pay', formData);
 }
 
+watch(() => props.shippingData, () => nextTick(validateForm));
 onMounted(validateForm);
 </script>

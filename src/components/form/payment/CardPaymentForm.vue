@@ -43,28 +43,34 @@
         />
       </div>
     </div>
-    <PPInput
-      v-if="showCardholder"
-      class="pp-input"
-      :label="translate(`l_cardholder`)"
-      :type="'text'"
-      :name="'cardholder'"
-      :error="validationErrors['cardholder']"
-      :mask="(value: string) => value.replace(/[^a-zA-Z.'\- ]+/g, '').toUpperCase()"
-      @input="unmaskedValues.cardholder = $event"
-      @blur="touched.push('cardholder')"
-    />
+    <template v-if="showCardholder">
+      <PPInput
+        v-if="!shippingData || billingFilledManually"
+        class="pp-input"
+        :label="translate(`l_cardholder`)"
+        :type="'text'"
+        :name="'cardholder'"
+        :error="validationErrors['cardholder']"
+        :mask="(value: string) => value.replace(/[^a-zA-Z.'\- ]+/g, '').toUpperCase()"
+        @input="unmaskedValues.cardholder = $event"
+        @blur="touched.push('cardholder')"
+      />
+      <input v-else type="hidden" name="cardholder" :value="shippingData.shipping_full_name">
+    </template>
+
     <PaymentFieldGroup
       :fields="otherFields"
       :validationErrors="validationErrors"
       @blur="touched.push($event)"
     />
 
-    <div v-if="billingFields.length" class="pp-billing-fields">
-      <div class="pp-form-header">{{ translate('t_billing_address') }}</div>
-      <PaymentFieldGroup
+    <div v-if="billingFields.length || shippingData" class="pp-billing-fields">
+      <div v-if="billingFields.length" class="pp-form-header">{{ translate('t_billing_address') }}</div>
+      <BillingFieldGroup
         :fields="billingFields"
+        :shippingData="shippingData"
         :validationErrors="validationErrors"
+        @fillManually="handleFillManually"
         @blur="touched.push($event)"
       />
     </div>
@@ -90,9 +96,10 @@ import type { Field, Translator } from 'o10r-pp-core';
 import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
 import { isSavedCardPaymentMethod } from 'o10r-pp-payment-method';
 import { PPInput } from "o10r-pp-ui-kit-vue";
-import { ref, onMounted, inject } from 'vue'
+import { ref, inject, onMounted, watch, nextTick } from 'vue';
 import useForm from './../../../composable/useForm';
 import PaymentFieldGroup from './../../../components/field/PaymentFieldGroup.vue';
+import BillingFieldGroup from './../../../components/field/BillingFieldGroup.vue';
 
 type CardFieldsConfig = {
   showPan: boolean;
@@ -106,6 +113,7 @@ type CardFieldsConfig = {
 
 const props = defineProps<{
   paymentMethod: PaymentMethod,
+  shippingData?: Record<string, unknown>,
   showPayButton: boolean
 }>();
 
@@ -117,6 +125,7 @@ const emit = defineEmits<{
 
 const { translate } = inject('translator') as Translator;
 
+const billingFilledManually = ref<boolean>(false);
 const isSavedCardForm = isSavedCardPaymentMethod(props.paymentMethod);
 const unmaskedValues = ref<Record<string, string>>({});
 
@@ -227,5 +236,18 @@ async function handleSubmit() {
   emit('pay', formData);
 }
 
+function handleFillManually(fillManually: boolean) {
+  billingFilledManually.value = fillManually;
+
+  if (props.shippingData) {
+    if (fillManually) {
+      unmaskedValues.value.cardholder = '';
+    } else {
+      unmaskedValues.value.cardholder = <string> props.shippingData.shipping_full_name || '';
+    }
+  }
+}
+
+watch(() => props.shippingData, () => nextTick(validateForm));
 onMounted(validateForm);
 </script>
