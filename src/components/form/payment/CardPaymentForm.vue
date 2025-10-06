@@ -248,6 +248,13 @@ function handleFillManually(fillManually: boolean) {
   }
 }
 
-watch(() => props.shippingData, () => nextTick(validateForm));
+watch(
+  () => props.shippingData,
+  () => {
+    handleFillManually(billingFilledManually.value);
+    nextTick(validateForm);
+  }
+);
+
 onMounted(validateForm);
 </script>
