@@ -64,7 +64,7 @@
       @blur="touched.push($event)"
     />
 
-    <div v-if="billingFields.length || shippingData" class="pp-billing-fields">
+    <div v-if="billingFields.length || (shippingData && !isSavedCardForm)" class="pp-billing-fields">
       <div v-if="billingFields.length" class="pp-form-header">{{ translate('t_billing_address') }}</div>
       <BillingFieldGroup
         :fields="billingFields"
