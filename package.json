@@ -34,6 +34,6 @@
   "dependencies": {
     "o10r-pp-core": "^0.5.11",
     "o10r-pp-payment-method": "^0.1.5",
-    "o10r-pp-ui-kit-vue": "^0.3.3"
+    "o10r-pp-ui-kit-vue": "^0.3.4"
   }
 }

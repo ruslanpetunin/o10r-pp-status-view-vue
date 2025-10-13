@@ -23,13 +23,21 @@
       {{ getSelectOptionLabel(field.name, option.value) }}
     </option>
   </PPSelect>
+  <PPCheckbox
+    v-else-if="field.type === 'checkbox'"
+    class="pp-input"
+    :label="field.label || field.name"
+    :name="field.name"
+    @change="$emit('blur')"
+    :error="validationError"
+  />
 </template>
 
 <script setup lang="ts">
 import { inject } from "vue";
 import type { Field, Translator } from "o10r-pp-core";
 import useForm from "./../../composable/useForm";
-import { PPInput, PPSelect } from "o10r-pp-ui-kit-vue";
+import { PPInput, PPSelect, PPCheckbox } from "o10r-pp-ui-kit-vue";
 
 defineProps<{
   field: Field
