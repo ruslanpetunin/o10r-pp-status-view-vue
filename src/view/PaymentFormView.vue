@@ -3,6 +3,7 @@
     v-if="paymentMethod.code === 'card'"
     :paymentMethod="paymentMethod"
     :shippingData="shippingData"
+    :paymentMode="paymentMode"
     :showPayButton="showPayButton"
     @pay="$emit('pay', $event)"
     @removed="$emit('removed')"
@@ -12,6 +13,7 @@
     v-else
     :paymentMethod="paymentMethod"
     :shippingData="shippingData"
+    :paymentMode="paymentMode"
     :showPayButton="showPayButton"
     @pay="$emit('pay', $event)"
     @input="$emit('input', $event)"
@@ -20,6 +22,7 @@
 
 <script setup lang="ts">
 import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
+import { PaymentMode } from 'o10r-pp-core';
 import CardPaymentForm from './../components/form/payment/CardPaymentForm.vue';
 import BasePaymentForm from './../components/form/payment/BasePaymentForm.vue';
 
@@ -27,9 +30,11 @@ withDefaults(
   defineProps<{
     paymentMethod: PaymentMethod,
     shippingData?: Record<string, unknown>,
+    paymentMode?: PaymentMode,
     showPayButton?: boolean
   }>(), {
-    showPayButton: true
+    showPayButton: true,
+    paymentMode: PaymentMode.PAYMENT,
   }
 );
 

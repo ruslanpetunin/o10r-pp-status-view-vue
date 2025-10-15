@@ -8,12 +8,13 @@
       @blur="touched.push($event)"
     />
     <PPButton v-if="showPayButton" class="pp-button" :disabled="!formValidationResult.isValid || submitted">
-      {{ translate(`b_pay`) }}
+      {{ translate(`b_mode_${paymentMode}`) }}
     </PPButton>
   </form>
 </template>
 
 <script setup lang="ts">
+import { PaymentMode } from 'o10r-pp-core';
 import type { Translator } from 'o10r-pp-core';
 import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
 import { inject, onMounted, watch, nextTick } from 'vue';
@@ -23,6 +24,7 @@ import PaymentFieldGroup from './../../../components/field/PaymentFieldGroup.vue
 const props = defineProps<{
   paymentMethod: PaymentMethod,
   shippingData?: Record<string, unknown>,
+  paymentMode: PaymentMode,
   showPayButton: boolean
 }>();
 

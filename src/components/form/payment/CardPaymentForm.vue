@@ -76,7 +76,7 @@
     </div>
 
     <PPButton v-if="showPayButton" class="pp-button" :disabled="!formValidationResult.isValid || submitted">
-      {{ translate(`b_pay`) }}
+      {{ translate(`b_mode_${paymentMode}`) }}
     </PPButton>
     <PPButton
       v-if="isSavedCardForm"
@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { useBillingFields } from 'o10r-pp-core';
+import { PaymentMode, useBillingFields } from 'o10r-pp-core';
 import type { Field, Translator } from 'o10r-pp-core';
 import type { FormValidationResult, PaymentMethod } from 'o10r-pp-payment-method';
 import { isSavedCardPaymentMethod } from 'o10r-pp-payment-method';
@@ -114,6 +114,7 @@ type CardFieldsConfig = {
 const props = defineProps<{
   paymentMethod: PaymentMethod,
   shippingData?: Record<string, unknown>,
+  paymentMode: PaymentMode,
   showPayButton: boolean
 }>();
 
